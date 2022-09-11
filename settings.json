@@ -1,0 +1,7 @@
+{
+    "host":"localhost",
+    "port":"8090",
+    "opc_url": "opc.tcp://localhost:62541",
+    "opc_idx": "ns=1;s=[ControlLogix L8]",
+    "debug": true
+}
