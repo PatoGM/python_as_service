@@ -7,9 +7,14 @@ from pydantic_models.UI_Request_RW import UI_Request_RW
 
 opc_client = OPC_Client()
 
+PREFIX = "/uiredesign"
+
 router = APIRouter(
-    prefix="/uiredesign"
+    prefix=PREFIX
 )
+
+http_endpoints = []
+ws_endpoints = []
 
 @router.on_event("startup")
 def startup():
@@ -21,6 +26,7 @@ def cleanup():
     opc_client.cleanup_all_clients()
 
 # Entire logic for communicating with UI will be here
+ws_endpoints.append("/ws")
 @router.websocket("/ws")
 async def ui_ws(websocket: WebSocket):
     await websocket.accept()
@@ -29,25 +35,25 @@ async def ui_ws(websocket: WebSocket):
 
     # We first wait for init message and act accordingly
     try:
-            opc_client.register_new_client(client_id, websocket)
+        opc_client.register_new_client(client_id, websocket)
 
-            obj = await websocket.receive_json()
-            init = UI_Request_Init.parse_obj(obj)
+        obj = await websocket.receive_json()
+        init = UI_Request_Init.parse_obj(obj)
 
-            status = await opc_client.test_connection()
+        status = await opc_client.test_connection()
 
-            if isinstance(status, Exception):
-                raise status
+        if isinstance(status, Exception):
+            raise status
 
-            invalid_tags, valid_tags = await opc_client.validate_tags(init.Tag)
+        invalid_tags, valid_tags = await opc_client.validate_tags(init.Tag)
 
-            # If OPC response was bad, let client know and break connection
-            if len(invalid_tags) != 0:
-                print("Init contained invalid tags:", invalid_tags)
-                await websocket.send_json({"Invalid Tags": invalid_tags})
-            else:
-                # print(client_id, "initted successfully")
-                await websocket.send_json({"Success": True})
+        # If OPC response was bad, let client know and break connection
+        if len(invalid_tags) != 0:
+            print("Init contained invalid tags:", invalid_tags)
+            await websocket.send_json({"Invalid Tags": invalid_tags})
+        else:
+            # print(client_id, "initted successfully")
+            await websocket.send_json({"Success": True})
 
     except Exception as e:
         # Let UI know they gave a wrongly formatted object and break connection
@@ -88,3 +94,7 @@ async def ui_ws(websocket: WebSocket):
             await websocket.send_json({"Error": str(e)})
     finally:
         opc_client.cleanup_one_client(client_id)
+
+@router.get("")
+async def endpoints():
+    return {"http": http_endpoints, "ws": ws_endpoints}

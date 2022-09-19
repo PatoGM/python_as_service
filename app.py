@@ -11,3 +11,13 @@ app.mount("/gui", StaticFiles(directory="static", html=True), name="static")
 # Add all routers to app
 app.include_router(routers.home.router)
 app.include_router(routers.uiredesign.router)
+
+@app.get("/")
+async def get_routers():
+    return {
+        "routers": 
+        [
+            routers.home.PREFIX,
+            routers.uiredesign.PREFIX
+        ]
+    }

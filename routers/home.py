@@ -6,16 +6,18 @@ from time import perf_counter
 import psutil
 from fastapi import APIRouter, WebSocket
 
-router = APIRouter(
-    prefix="/home",
-)
+PREFIX = "/home"
 
-@router.get("")
-async def pasta():
-    return {"pasta": "is delicious"}
+router = APIRouter(
+    prefix=PREFIX,
+)
 
 psutil.cpu_percent()
 
+http_endpoints = []
+ws_endpoints = []
+
+ws_endpoints.append("/ws")
 @router.websocket("/ws")
 async def ws(websocket: WebSocket):
     await websocket.accept()
@@ -42,6 +44,7 @@ async def ws(websocket: WebSocket):
 #     return os.lstat(path)
 
 # https://stackoverflow.com/questions/21455021/python-map-a-filesystem-to-a-directory-structure-works-but-how
+http_endpoints.append("/fs, number, path")
 @router.get("/fs/{max_depth}/{rootdir:path}")
 async def get_directory_structure(max_depth: int, rootdir: str):
     """
@@ -97,3 +100,7 @@ def get_directory_structure_to_some_depth(rootdir: str, start_time: float, depth
     except Exception as e:
         print(e)
         return {}
+
+@router.get("")
+async def endpoints():
+    return {"http": http_endpoints, "ws": ws_endpoints}
