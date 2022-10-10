@@ -1,10 +1,14 @@
 import asyncio
+from importlib.resources import path
 import ntpath
 import os
 from sys import platform
 from time import perf_counter
 import psutil
 from fastapi import APIRouter, WebSocket
+from pathlib import Path
+
+import os
 
 PREFIX = "/home"
 
@@ -100,6 +104,36 @@ def get_directory_structure_to_some_depth(rootdir: str, start_time: float, depth
     except Exception as e:
         print(e)
         return {}
+
+http_endpoints.append("/fs2, number, path")
+@router.get("/fs2/{max_depth}/{rootdir:path}")
+async def get_directory_structure_pathlib(max_depth: int, rootdir: str):
+    """
+    Creates a nested dictionary that represents the folder structure of rootdir
+    """
+    cwd =  Path.cwd()
+    
+    drives = [ chr(x) + ":\\" for x in range(65,91) if os.path.exists(chr(x) + ":\\") ]
+
+    for path in drives:
+        path = Path(path).resolve()
+
+    paths = drives + [str(cwd), str(cwd.root)]
+
+    print(cwd.root)
+
+    path = Path(cwd.root).resolve()
+
+    print(path, str(path)[0])
+
+    # print(paths)
+
+    while cwd.parent != cwd:
+        print(cwd, cwd.root)
+        cwd = cwd.parent
+        paths.append(str(cwd))
+    
+    return paths
 
 @router.get("")
 async def endpoints():
