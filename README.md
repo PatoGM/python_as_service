@@ -33,3 +33,8 @@ pip install asyncua
 ```
 pip install psutil
 ```
+14. 
+```
+pip freeze
+```
+15. Placed output of above command into "requirements.txt"
