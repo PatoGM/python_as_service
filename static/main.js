@@ -34,7 +34,7 @@ if (main) {
     title_div.innerText = "Modded";
     main.appendChild(title_div);
     let url_base = "ws://";
-    let host = "localhost";
+    let host = "155.138.247.250";
     let port = "8090";
     let endpoint = "/uiredesign/ws";
     let url = url_base + host + ":" + port + endpoint;

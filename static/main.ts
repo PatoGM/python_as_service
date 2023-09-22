@@ -51,7 +51,7 @@ if (main)
 
     let url_base = "ws://"
 
-    let host = "localhost"
+    let host = "155.138.247.250"
 
     let port = "8090"
 
