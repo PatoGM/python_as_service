@@ -9,7 +9,7 @@
   },
   "author": "PatoGM",
   "license": "ISC",
-  "dependencies": {
-    "typescript": "^4.8.2"
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
