@@ -1,7 +1,7 @@
 "use strict";
 let main = document.getElementById("main");
 class PC_STATS {
-    constructor(url) {
+    constructor(url, main) {
         this.endpoint = "/home/ws";
         this.cpu = document.createElement("div");
         this.ram = document.createElement("div");
@@ -15,9 +15,9 @@ class PC_STATS {
         this.ws.addEventListener("message", evt => {
             let obj = JSON.parse(evt.data);
             if (obj.cpu)
-                this.cpu.innerHTML = obj.cpu;
+                this.cpu.innerHTML = `CPU: ${obj.cpu}`;
             if (obj.ram)
-                this.ram.innerHTML = obj.ram;
+                this.ram.innerHTML = `RAM: ${obj.ram}`;
         });
         this.ws.addEventListener("error", console.log);
         this.ws.addEventListener("close", evt => {
@@ -39,18 +39,5 @@ if (main) {
     let endpoint = "/uiredesign/ws";
     let url = url_base + host + ":" + port + endpoint;
     let common_url = url_base + host + ":" + port;
-    // let reconnect_button = document.createElement("button")
-    // reconnect_button.innerText = "RECONNECT"
-    // reconnect_button.addEventListener
-    //     (
-    //         "click",
-    //         evt =>
-    //         {
-    //             ws.close(4200, "rewind time")
-    //             setup_ws()
-    //         }
-    //     )
-    // main.appendChild(reconnect_button)
-    let pc = new PC_STATS(common_url);
-    pc.setup();
+    let pc = new PC_STATS(common_url, main);
 }

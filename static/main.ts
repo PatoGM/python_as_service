@@ -1,4 +1,4 @@
-let main = document.getElementById("main")!
+let main = document.getElementById("main")
 
 class PC_STATS
 {
@@ -8,7 +8,7 @@ class PC_STATS
     cpu: HTMLDivElement = document.createElement("div")
     ram: HTMLDivElement = document.createElement("div")
 
-    constructor(url: string)
+    constructor(url: string, main: HTMLElement)
     {
         this.common_url = url
         this.setup()
@@ -25,10 +25,10 @@ class PC_STATS
             let obj = JSON.parse(evt.data)
 
             if (obj.cpu)
-                this.cpu.innerHTML = obj.cpu
+                this.cpu.innerHTML = `CPU: ${obj.cpu}`
 
             if (obj.ram)
-                this.ram.innerHTML = obj.ram
+                this.ram.innerHTML = `RAM: ${obj.ram}`
         })
 
         this.ws.addEventListener("error", console.log)
@@ -61,20 +61,5 @@ if (main)
 
     let common_url = url_base + host + ":" + port
 
-    // let reconnect_button = document.createElement("button")
-    // reconnect_button.innerText = "RECONNECT"
-    // reconnect_button.addEventListener
-    //     (
-    //         "click",
-    //         evt =>
-    //         {
-    //             ws.close(4200, "rewind time")
-    //             setup_ws()
-    //         }
-    //     )
-    // main.appendChild(reconnect_button)
-
-    let pc = new PC_STATS(common_url)
-
-    pc.setup()
+    let pc = new PC_STATS(common_url, main)
 }
