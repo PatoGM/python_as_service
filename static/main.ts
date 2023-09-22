@@ -22,13 +22,13 @@ class PC_STATS
 
         this.ws.addEventListener("message", evt =>
         {
-            let obj = JSON.parse(evt.data)
+            let obj = JSON.parse(evt.data) as {cpu: number, ram: number}
 
             if (obj.cpu)
-                this.cpu.innerHTML = `CPU: ${obj.cpu}`
+                this.cpu.innerHTML = `CPU: ${obj.cpu.toFixed(0)}% Used`
 
             if (obj.ram)
-                this.ram.innerHTML = `RAM: ${obj.ram}`
+                this.ram.innerHTML = `RAM: ${obj.ram.toFixed(0)}% Used`
         })
 
         this.ws.addEventListener("error", console.log)
